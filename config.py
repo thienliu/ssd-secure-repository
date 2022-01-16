@@ -1,16 +1,12 @@
+DEBUG = True
+
 import os
+BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 
-class Config(object):
-    DEBUG = True
-    TESTING = False
-    DATABASE_NAME = "awesome_repo"
+SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(BASE_DIR, 'awesome_repo.db')
+DATABASE_CONNECT_OPTIONS = {}
+SQLALCHEMY_TRACK_MODIFICATIONS = False
+CSRF_ENABLED = True
+CSRF_SESSION_KEY = os.urandom(24)
 
-class DevelopmentConfig(Config):
-    # Configure app's secret key to use sessions for authentication
-    SECRET_KEY = os.urandom(24)
-
-config = {
-    'development': DevelopmentConfig,
-    'testing': DevelopmentConfig,
-    'production': DevelopmentConfig
-}
+SECRET_KEY = os.urandom(24)
