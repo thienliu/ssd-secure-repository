@@ -1,11 +1,16 @@
-from flask import Flask
+from flask.cli import FlaskGroup
 
-app = Flask(__name__)
+from api import create_app
+
+app = create_app('development')
+
+cli = FlaskGroup(app)
 
 @app.route("/")
 def home():
     return "<p>Home Page!</p>"
 
+# @cli.command()
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    cli()
