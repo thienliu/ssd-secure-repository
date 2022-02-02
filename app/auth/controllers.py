@@ -25,3 +25,11 @@ auth = Blueprint('auth', __name__, url_prefix='/auth')
 def login():
     form = LoginForm(request.form)
     return render_template("auth/login.html", form=form)
+
+@auth.route('/logout', methods=['GET', 'POST'])
+def logout():
+    return redirect(url_for('main.home'))
+
+@auth.route('/user/<user_id>', methods=['GET', 'POST'])
+def profile(user_id):
+    return render_template('auth/profile.html', user_id=user_id)
