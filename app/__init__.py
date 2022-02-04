@@ -34,6 +34,7 @@ app.app_context().push()
 from app.auth.controllers import auth as auth_module
 from app.main.controllers import main as main_module
 from app.admin.controllers import admin as admin_module
+from app.document.controllers import document as document_module
 
 @app.errorhandler(404)
 def not_found(error):
@@ -47,6 +48,7 @@ def index():
 app.register_blueprint(auth_module)
 app.register_blueprint(main_module)
 app.register_blueprint(admin_module)
+app.register_blueprint(document_module)
 # ..
 
 # Build the database:
