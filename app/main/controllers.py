@@ -9,8 +9,15 @@ from flask import (
     url_for 
 )
 
+from flask_login import login_required, current_user
+
 main = Blueprint('main', __name__, url_prefix='/main')
 
-@main.route('/', methods=['GET', 'POST'])
+@main.route('/', methods=['GET'])
+@login_required
 def home():
-    return render_template("main/home.html")
+    if current_user.is_authenticated:
+        if current_user.isAdmin:
+            return redirect(url_for('admin.home'))
+        else:
+            return redirect(url_for('main.home'))
