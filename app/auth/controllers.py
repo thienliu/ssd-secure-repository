@@ -62,11 +62,14 @@ def logout():
     logout_user()
     return redirect(url_for('main.home'))
 
-@auth.route('/user/<user_id>', methods=['GET', 'POST'])
-def profile(user_id):
-    return render_template('auth/profile.html', user_id=user_id)
-
-
+@auth.route('/profile', methods=['GET'])
+@login_required
+def profile():
+    if current_user.get_id() is not None:
+        current_logged_in_user = User.query.filter_by(id=current_user.get_id()).first()
+        return render_template('auth/profile.html', user=current_logged_in_user)
+    else:
+        return redirect(url_for('main.home'))
 # def isAdmin():
 #     if current_user.get_id() is not None:
 #         current_logged_in_user = User.query.filter_by(
