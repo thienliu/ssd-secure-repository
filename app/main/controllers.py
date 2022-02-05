@@ -20,4 +20,4 @@ def home():
         if current_user.isAdmin:
             return redirect(url_for('admin.home'))
         else:
-            return redirect(url_for('document.documents_home'))
+            return redirect(url_for('document.list'))

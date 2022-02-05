@@ -1,0 +1,20 @@
+{% extends 'main/layout.html' %}
+{% block content %}
+<div class="content-section">
+    <form method="POST" enctype="multipart/form-data" action="{{ url_for('document.upload') }}">
+        {{ form.csrf_token }}
+        {{ form.hidden_tag() }}
+        <fieldset class="form-group">
+            <legend class="border-bottom mb-4">{{ form.file.label(class="form-control-label") }}</legend>
+            <div class="mb-3">
+                <div class="form-group">
+                    {{ form.file(class="form-control form-control-lg") }}
+                </div>
+            </div>
+        </fieldset>
+        <div class="form-group">
+            {{ form.submit(class="btn btn-outline-info") }}
+        </div>
+    </form>
+</div>
+{% endblock %}
