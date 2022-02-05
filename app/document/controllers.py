@@ -35,3 +35,9 @@ def documents_home():
     files = FileService.get_user_files(user_id=current_user.id)
 
     return render_template('document/repository.html', files=files, form=form)
+
+@document.route('/action/<file_id>', methods=['POST'])
+@login_required
+def documents_action(file_id):    
+    print('selected file:', file_id)
+    return redirect(url_for('document.documents_home'))

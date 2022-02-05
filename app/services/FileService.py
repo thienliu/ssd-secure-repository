@@ -29,7 +29,7 @@ class FileService:
         uploaded_file.stream.seek(0)
         size = len(blob)
         f_hash = sha256(blob).hexdigest()
-        # A way of transactional insert
+
         try:
             cls.__save_file_db(f_hash, filename, size, user_id)
         except Exception as e:

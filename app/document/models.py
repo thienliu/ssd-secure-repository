@@ -9,3 +9,10 @@ class File(Base):
     file_size = db.Column(db.Integer, nullable=False)
     file_hash = db.Column(db.String(256), nullable=False)
     owner_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+
+    @property
+    def formattedSize(self):
+        for x in ['bytes', 'KB', 'MB', 'GB', 'TB']:
+            if self.file_size < 1024.0:
+                return "%3.1f %s" % (self.file_size, x)
+            self.file_size /= 1024.0
