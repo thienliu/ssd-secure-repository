@@ -2,6 +2,7 @@
 from flask import Flask, render_template, redirect, url_for
 from flask_login import login_user, current_user, logout_user, login_required, UserMixin, LoginManager
 from flask_bcrypt import Bcrypt
+from config import config
 
 # Import SQLAlchemy
 from flask_sqlalchemy import SQLAlchemy
@@ -10,7 +11,7 @@ from flask_sqlalchemy import SQLAlchemy
 app = Flask(__name__)
 
 # Configurations
-app.config.from_object('config')
+app.config.from_object(config['production'])
 
 # Define the database object which is imported
 # by modules and controllers

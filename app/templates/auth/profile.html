@@ -1,8 +1,8 @@
 {% extends 'main/layout.html' %}
 {% block content %}
     <div class="container">
-        <p1>Profile</p1>
-        <p>Welcome user {{ user.id }}</p>
+        <legend class="border-bottom mb-4">Profile</legend>
+        <p>User ID: {{ user.id }}</p>
         <p>Email: {{ user.email }}</p>
     </div>
 {% endblock %}

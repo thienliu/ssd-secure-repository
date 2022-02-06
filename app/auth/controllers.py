@@ -19,7 +19,7 @@ from app import db, bcrypt, login_manager
 
 from flask_login import login_user, current_user, logout_user, login_required, LoginManager
 
-from app.auth.forms import LoginForm
+from app.auth.forms import LoginForm, ChangePasswordForm
 from app.auth.models import User
 
 auth = Blueprint('auth', __name__, url_prefix='/auth')
@@ -47,11 +47,6 @@ def login():
             login_user(user, remember=True)
             session.permanent = True
             return redirect(url_for('admin.home')) if user.isAdmin else redirect(url_for('main.home'))
-            # next_page = request.args.get('next')
-            # if next_page:
-            #     return redirect(next_page)
-            # else:
-            #    return redirect(url_for('admin.dashboard')) if isAdmin() else redirect(url_for('main.home'))
         else:
             flash('Invalid credentials. Please try again!', 'danger')
 
@@ -62,18 +57,19 @@ def logout():
     logout_user()
     return redirect(url_for('main.home'))
 
-@auth.route('/profile', methods=['GET'])
+@auth.route('/profile', methods=['GET', 'POST'])
 @login_required
 def profile():
     if current_user.get_id() is not None:
-        current_logged_in_user = User.query.filter_by(id=current_user.get_id()).first()
-        return render_template('auth/profile.html', user=current_logged_in_user)
+        # form = ChangePasswordForm()
+        user = User.query.filter_by(id=current_user.get_id()).first()
+
+        # if form.validate_on_submit():
+        #     if form.current_password is None:
+
+        #     if user and bcrypt.check_password_hash(user.password, form.current_password.data):
+        #         return render_template('auth/profile.html', user=user, form=form)
+        
+        return render_template('auth/profile.html', user=user)
     else:
         return redirect(url_for('main.home'))
-# def isAdmin():
-#     if current_user.get_id() is not None:
-#         current_logged_in_user = User.query.filter_by(
-#             id=current_user.get_id()).first()
-#         return current_logged_in_user.role == 1
-#     else:
-#         return False
