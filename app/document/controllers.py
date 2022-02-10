@@ -14,7 +14,8 @@ from app.document.forms import UploadForm
 from app.services.FileService import FileService
 from app.errors.filesError import (
     FileAlreadyExistsError,
-    FileInsertionError
+    FileInsertionError,
+    FileNotExistsError
 )
 
 document = Blueprint('document', __name__, url_prefix='/document')
@@ -27,6 +28,7 @@ def list():
     return render_template('document/repository.html', files=files)
 
 @document.route('/upload', methods=['POST'])
+@login_required
 def upload():
     form = UploadForm()
 
@@ -43,17 +45,23 @@ def upload():
 
     return render_template('document/upload.html', form=form)
 
-@document.route('/view/<file_id>', methods=['GET'])
+@document.route('/download/<file_name>', methods=['POST'])
 @login_required
-def view(file_id):
-    return redirect(url_for('document.list'))
+def download(file_name):
+    try:
+        file = FileService.get_file_from_disk(file_name)
+    except FileNotExistsError as e:
+        return f'File: {e.filename} does not exists!', 404
+    return file
 
-@document.route('/download/<file_id>', methods=['GET'])
+@document.route('/delete/<file_name>', methods=['POST', 'DELETE'])
 @login_required
-def download(file_id):
-    return redirect(url_for('document.list'))
+def delete(file_name):
+    try:
+        file = FileService.get_file_by_title(file_name)
+    except FileNotExistsError as e:
+        return f'File: {e.filename} does not exists!', 404
 
-@document.route('/delete/<file_id>', methods=['DELETE'])
-@login_required
-def delete(file_id):
+    FileService.delete_file(file)
+    
     return redirect(url_for('document.list'))

@@ -11,7 +11,7 @@ from flask_sqlalchemy import SQLAlchemy
 app = Flask(__name__)
 
 # Configurations
-app.config.from_object(config['production'])
+app.config.from_object(config['development'])
 
 # Define the database object which is imported
 # by modules and controllers

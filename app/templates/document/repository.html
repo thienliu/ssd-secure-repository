@@ -30,17 +30,12 @@
 
                     <div class="row row-cols-auto">
                         <div class="col">
-                            <form action="{{ url_for('document.view', file_id=file.id) }}" method="POST">
-                                <input class="btn btn-primary btn-block" type="submit" value="View">
-                            </form>
-                        </div>
-                        <div class="col">
-                            <form action="{{ url_for('document.download', file_id=file.id) }}" method="POST">
+                            <form action="{{ url_for('document.download', file_name=file.title) }}" method="POST">
                                 <input class="btn btn-success btn-block" type="submit" value="Download">
                             </form>
                         </div>
                         <div class="col">
-                            <form action="{{ url_for('document.delete', file_id=file.id) }}" method="POST">
+                            <form action="{{ url_for('document.delete', file_name=file.title) }}" method="POST">
                                 <input class="btn btn-danger btn-block" type="submit" value="Delete">
                             </form>
                         </div>
