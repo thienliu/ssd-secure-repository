@@ -2,7 +2,8 @@
 {% block content %}
     <div class="container">
         <legend class="border-bottom mb-4">Profile</legend>
-        <p>User ID: {{ user.id }}</p>
-        <p>Email: {{ user.email }}</p>
+        <p><strong>User ID:</strong> {{ user.id }}</p>
+        <p><strong>Role:</strong>{% for role in user.roles %} {{ role.name + ' ' }} {% endfor %}</p>
+        <p><strong>Email:</strong> {{ user.email }}</p>
     </div>
 {% endblock %}
