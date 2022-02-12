@@ -1,21 +1,13 @@
 <header>
-    <!-- <nav>
-     <a href="{{ url_for('main.home') }}">Home</a>
-     <a href="{{ url_for('auth.profile', user_id=1) }}">My Account</a>
-     <a href="{{ url_for('auth.logout') }}">Logout</a>
-   </nav> -->
-
-   <ul class="nav justify-content-center">
+  <ul class="nav justify-content-center">
     <li class="nav-item">
       <a class="nav-link active" aria-current="page" href="{{ url_for('main.home') }}">Home</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" href="{{ url_for('auth.profile', user_id=1) }}">My Account</a>
+      <a class="nav-link" href="{{ url_for('auth.profile') }}">My Account</a>
     </li>
     <li class="nav-item">
       <a class="nav-link" href="{{ url_for('auth.logout') }}">Logout</a>
     </li>
   </ul>
- </header>
-
- 
+</header>

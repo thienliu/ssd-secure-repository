@@ -1,4 +1,11 @@
 {% extends "main/layout.html" %}
 {% block content %}
     <p1>Admin dashboard</p1>
+    {% for log in logs %}
+    <p>Log Type: {{ log.event_type }}</p>
+    <p>Message: {{ log.message }}</p>
+    <p>User Email: {{ log.user_email }}</p>
+    <p>IP Address: {{ log.ip_address }}</p>
+    <p>Timestamp: {{ log.time_stamp }}</p>
+    {% endfor %}
 {% endblock %}

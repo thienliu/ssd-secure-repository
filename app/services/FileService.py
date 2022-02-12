@@ -15,12 +15,15 @@ from app.errors.filesError import (
     FileDeletionError
 )
 
+from app.services.Logger import EventType, Logger
+
 class FileService:
     @classmethod
     def get_user_files(cls, user_id: int):
         files = db.session.query(File).filter_by(owner_id=user_id).order_by(
             File.created_at.desc()
         )
+        Logger.logEvent(message="View Documents", type=EventType.EVENT)
         return files
 
     @classmethod
@@ -36,8 +39,10 @@ class FileService:
         try:
             cls.__save_file_db(f_hash, filename, size, user_id)
         except Exception as e:
+            Logger.logEvent(message="Failed to upload file. Filename:" + filename, type=EventType.ERROR)
             raise FileInsertionError(filename)
         else:
+            Logger.logEvent(message="Upload file successfully. Filename:" + filename, type=EventType.EVENT)
             cls.__save_file_disk(uploaded_file, filename)
             db.session.commit()
 
@@ -85,8 +90,10 @@ class FileService:
         try:
             db.session.delete(file)
         except Exception as e:
+            Logger.logEvent(message="Failed to delete file. Filename:" + file.title, type=EventType.ERROR)
             raise FileDeletionError(file.title)
         else:
+            Logger.logEvent(message="Delete file successfully. Filename:" + file.title, type=EventType.EVENT)
             os.remove(os.path.join(cls.__get_upload_dir(), file.title))
         db.session.commit()
     

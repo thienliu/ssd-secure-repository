@@ -1,3 +1,5 @@
+from app.services.Logger import Event
+
 from flask import (
     Blueprint,
     redirect,
@@ -5,7 +7,7 @@ from flask import (
     url_for
 )
 
-from app import authorize
+from app import authorize, db
 
 from flask_login import login_required, current_user
 
@@ -23,6 +25,8 @@ admin = Blueprint('admin', __name__, url_prefix='/admin')
 # Thus, the manual check `is_authenticated`` and `isAdmin`` are used here
 def home():
     if current_user.is_authenticated and current_user.isAdmin:
-        return render_template("admin/dashboard.html")
+        # logs = db.session.query(Event).filter_by(user_email=current_user)
+        logs = Event.query.all()
+        return render_template("admin/dashboard.html", logs=logs)
     else:
         return redirect(url_for('main.home'))

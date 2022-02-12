@@ -1,26 +1,22 @@
 # Import flask dependencies
+from distutils.log import Log
 from flask import ( 
     Blueprint,
     current_app, 
     request, 
     render_template, 
     flash, 
-    g, 
     session, 
     redirect, 
     url_for 
 )
 
-# Import password /encryption helper tools
-# from flask_bcrypt import Bcrypt
-
 # Import the database object from the main app module
-from app import db, bcrypt, login_manager
-
+from app import bcrypt, login_manager
 from flask_login import login_user, current_user, logout_user, login_required, LoginManager
-
-from app.auth.forms import LoginForm, ChangePasswordForm
+from app.auth.forms import LoginForm
 from app.auth.models import User
+from app.services.Logger import EventType, Logger
 
 auth = Blueprint('auth', __name__, url_prefix='/auth')
 app_config = current_app.config
@@ -46,8 +42,10 @@ def login():
         if user and bcrypt.check_password_hash(user.password, form.password.data):
             login_user(user, remember=True)
             session.permanent = True
+            Logger.logEvent(message="Logged In", type=EventType.EVENT)
             return redirect(url_for('admin.home')) if user.isAdmin else redirect(url_for('main.home'))
         else:
+            Logger.logEvent(message="Invalid Credentials", type=EventType.ERROR)
             flash('Invalid credentials. Please try again!', 'danger')
 
     return render_template("auth/login.html", form=form)
@@ -55,6 +53,7 @@ def login():
 @auth.route('/logout', methods=['GET', 'POST'])
 def logout():
     logout_user()
+    Logger.logEvent(message="Logged Out", type=EventType.EVENT)
     return redirect(url_for('main.home'))
 
 @auth.route('/profile', methods=['GET', 'POST'])
@@ -69,7 +68,8 @@ def profile():
 
         #     if user and bcrypt.check_password_hash(user.password, form.current_password.data):
         #         return render_template('auth/profile.html', user=user, form=form)
-        
+        Logger.logEvent(message="View Profile", type=EventType.EVENT)
         return render_template('auth/profile.html', user=user)
     else:
+        Logger.logEvent(message="Failed to View Profile. Current login is invalid", type=EventType.EVENT)
         return redirect(url_for('main.home'))
