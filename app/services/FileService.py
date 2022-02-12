@@ -1,6 +1,5 @@
 import os
 from app import db
-# from app.document.controllers import upload
 from app.document.models import File
 from werkzeug.datastructures import FileStorage
 from werkzeug.utils import secure_filename
@@ -30,8 +29,6 @@ class FileService:
         if db.session.query(File).filter_by(owner_id=user_id, title=filename).first() is not None:
             raise FileAlreadyExistsError(filename)
         blob = uploaded_file.read()
-        # FileStorage class (which is the class to handle uploaded file in Flask)
-        # points to end of file after every action (saving or reading).
         uploaded_file.stream.seek(0)
         size = len(blob)
         f_hash = sha256(blob).hexdigest()
@@ -39,7 +36,6 @@ class FileService:
         try:
             cls.__save_file_db(f_hash, filename, size, user_id)
         except Exception as e:
-            # st.logger.exception(e)
             raise FileInsertionError(filename)
         else:
             cls.__save_file_disk(uploaded_file, filename)
@@ -89,7 +85,6 @@ class FileService:
         try:
             db.session.delete(file)
         except Exception as e:
-            # st.logger.exception(e)
             raise FileDeletionError(file.title)
         else:
             os.remove(os.path.join(cls.__get_upload_dir(), file.title))

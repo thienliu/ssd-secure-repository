@@ -1,8 +1,9 @@
 # Import flask and template operators
 from flask import Flask, render_template, redirect, url_for
-from flask_login import login_user, current_user, logout_user, login_required, UserMixin, LoginManager
+from flask_login import LoginManager
 from flask_bcrypt import Bcrypt
 from config import config
+from flask_authorize import Authorize
 
 # Import SQLAlchemy
 from flask_sqlalchemy import SQLAlchemy
@@ -28,6 +29,8 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'auth.login'
 login_manager.login_message_category = 'info'
+
+authorize = Authorize(app)
 
 app.app_context().push()
 

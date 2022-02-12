@@ -1,8 +1,18 @@
 from app import db
 from app.main.models import Base
 from datetime import datetime
+from flask_authorize import PermissionsMixin
 
-class File(Base):
+class File(Base, PermissionsMixin):
+    __tablename__ = 'files'
+    __table_args__ = { 'extend_existing': True } 
+
+    __permissions__ = dict(
+        owner=['read', 'update', 'revoke', 'delete'],
+        group=['read', 'update'],
+        other=['read']
+    )
+
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(128), nullable=False, unique=True)
     created_at = db.Column(db.DateTime, default=datetime.now)
