@@ -34,3 +34,8 @@ class Logger:
 
         db.session.add(event)
         db.session.commit()
+
+    @classmethod
+    def get_logs_for_user(cls, email):
+        logs = Event.query.filter_by(user_email=email).order_by(Event.time_stamp.desc())
+        return logs

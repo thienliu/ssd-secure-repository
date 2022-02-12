@@ -1,4 +1,4 @@
-from app.services.Logger import Event
+from app.services.Logger import Event, EventType, Logger
 
 from flask import (
     Blueprint,
@@ -32,10 +32,9 @@ def home():
         search = request.args.get('search_term')
 
         if search:
+            Logger.logEvent(message="Search for " + '`' + search + '`', type=EventType.EVENT)
             user = User.query.filter_by(email=unquote(search)).first()
-            logs = Event.query.filter_by(user_email=unquote(search)).order_by(
-            Event.time_stamp.desc()
-        )
+            logs = Logger.get_logs_for_user(unquote(search))
             if not user:
                 flash('No User Found', 'danger')
 
