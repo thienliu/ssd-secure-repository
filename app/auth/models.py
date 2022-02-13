@@ -68,12 +68,14 @@ class User(Base, UserMixin):
     def isAdmin(self):
         if current_user.get_id() is not None:
             current_logged_in_user = User.query.filter_by(id=current_user.get_id()).first()
+            return 'admin' in map(lambda r: r.name, current_logged_in_user.roles)
 
-            for role in current_logged_in_user.roles:
-                if role.name == 'admin':
-                    return true
         else:
             return False
+
+    @property
+    def hasAdminRole(self):
+        return 'admin' in map(lambda r: r.name, self.roles)
 
     def __repr__(self):
         return '<User %r>' % (self.name)       

@@ -39,3 +39,11 @@ class Logger:
     def get_logs_for_user(cls, email):
         logs = Event.query.filter_by(user_email=email).order_by(Event.time_stamp.desc())
         return logs
+
+    @classmethod
+    def delete_logs_for_user(cls, email):
+        logs = Event.query.filter_by(user_email=email)
+        for log in logs:
+            db.session.delete(log)
+        
+        db.session.commit()

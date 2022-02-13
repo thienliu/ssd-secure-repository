@@ -1,10 +1,6 @@
 from flask import (
     Blueprint,
-    request,
     render_template,
-    flash,
-    g,
-    session,
     redirect,
     url_for
 )
@@ -19,7 +15,6 @@ from app.errors.filesError import (
 )
 
 document = Blueprint('document', __name__, url_prefix='/document')
-
 
 @document.route('/', methods=['GET', 'POST'])
 @login_required

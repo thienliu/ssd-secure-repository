@@ -1,4 +1,4 @@
-from app.services.Logger import Event, EventType, Logger
+from app.services.Logger import EventType, Logger
 
 from flask import (
     Blueprint,
@@ -13,7 +13,8 @@ from urllib.parse import unquote
 
 
 from flask_login import login_required, current_user
-from app.auth.models import User
+from app.services.UserService import UserService
+from app.errors.authErrors import UserNotExistError
 
 admin = Blueprint('admin', __name__, url_prefix='/admin')
 
@@ -33,13 +34,37 @@ def home():
 
         if search:
             Logger.logEvent(message="Search for " + '`' + search + '`', type=EventType.EVENT)
-            user = User.query.filter_by(email=unquote(search)).first()
+            user = UserService.get_user_by_email(unquote(search))
             logs = Logger.get_logs_for_user(unquote(search))
+
             if not user:
                 flash('No User Found', 'danger')
 
-            return render_template("admin/dashboard.html", user=user, logs=logs, performingSearch=True)
+            return render_template(
+                "admin/dashboard.html", 
+                user=user,
+                logs=logs,
+                performingSearch=True
+            )
         else:
-            return render_template("admin/dashboard.html", user=None, logs=[], performingSearch=False)
+            return render_template(
+                "admin/dashboard.html", 
+                user=None, 
+                logs=[], 
+                performingSearch=False
+            )
     else:
         return redirect(url_for('main.home'))
+
+@admin.route('/delete/<email>', methods=['POST'])
+def delete(email):
+    try:
+        user = UserService.get_user_by_email(email)
+    except UserNotExistError as e:
+        return f'User: {e.user_email} does not exists!', 404
+    
+    UserService.delete_user(user)
+    Logger.delete_logs_for_user(email)
+
+    return redirect(url_for('admin.home'))
+        

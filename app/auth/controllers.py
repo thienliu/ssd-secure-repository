@@ -1,5 +1,4 @@
 # Import flask dependencies
-from distutils.log import Log
 from flask import ( 
     Blueprint,
     current_app, 
@@ -60,14 +59,8 @@ def logout():
 @login_required
 def profile():
     if current_user.get_id() is not None:
-        # form = ChangePasswordForm()
         user = User.query.filter_by(id=current_user.get_id()).first()
 
-        # if form.validate_on_submit():
-        #     if form.current_password is None:
-
-        #     if user and bcrypt.check_password_hash(user.password, form.current_password.data):
-        #         return render_template('auth/profile.html', user=user, form=form)
         Logger.logEvent(message="View Profile", type=EventType.EVENT)
         return render_template('auth/profile.html', user=user)
     else:

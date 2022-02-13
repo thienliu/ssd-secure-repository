@@ -4,8 +4,7 @@ from wtforms.validators import DataRequired, Email, ValidationError
 from flask_login import current_user
 from app.errors.authErrors import ( 
     InvalidLoginSessionError,
-    InvalidCurrentPasswordError,
-    PasswordMismatchError
+    InvalidCurrentPasswordError
 )
 from app.auth.models import User
 from app import bcrypt
