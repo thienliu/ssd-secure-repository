@@ -26,6 +26,11 @@ app_config = current_app.config
 def load_user(user_id):
     return User.query.get(int(user_id))
 
+# A route to handle user login
+# This route is reusable for both user and admin
+# A better solution is to separate user and admin login into 2 different systems
+# because we don't want to expose the admin system to the world outside
+
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
@@ -38,6 +43,8 @@ def login():
     
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
+
+        # Validate the user hashed password rather than plain text
         if user and bcrypt.check_password_hash(user.password, form.password.data):
             login_user(user, remember=True)
             session.permanent = True
@@ -49,12 +56,15 @@ def login():
 
     return render_template("auth/login.html", form=form)
 
+# A route to handle user logout
 @auth.route('/logout', methods=['GET', 'POST'])
 def logout():
     logout_user()
     Logger.logEvent(message="Logged Out", type=EventType.EVENT)
     return redirect(url_for('main.home'))
 
+# A route to handle user profile, currently this is share between an admin and an user
+# Admin should have a separate system for security purpose
 @auth.route('/profile', methods=['GET', 'POST'])
 @login_required
 def profile():

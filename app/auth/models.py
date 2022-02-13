@@ -64,6 +64,7 @@ class User(Base, UserMixin):
         self.groups = groups
         self.status = status
 
+    # Indicates the current logged-in user is an admin or not
     @property
     def isAdmin(self):
         if current_user.get_id() is not None:
@@ -73,6 +74,7 @@ class User(Base, UserMixin):
         else:
             return False
 
+    # Indicates a specific user has `admin` role or not
     @property
     def hasAdminRole(self):
         return 'admin' in map(lambda r: r.name, self.roles)

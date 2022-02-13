@@ -8,6 +8,7 @@ from flask_login import login_required, current_user
 
 main = Blueprint('main', __name__, url_prefix='/main')
 
+# A main route to navigate user to the proper route when opening the app
 @main.route('/', methods=['GET'])
 @login_required
 def home():

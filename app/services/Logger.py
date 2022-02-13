@@ -19,7 +19,13 @@ class Event(Base):
     time_stamp = db.Column(db.DateTime, default=datetime.now)
     user_email = db.Column(db.String(256), nullable=True)
     ip_address = db.Column(db.String(128), nullable=False)
+
 class Logger:
+
+    # Performs tracking user's activity
+    # The current version support 2 types of events: normal event and error
+    # This is a minimal setup to enable the admin dashboard where an admin can view user's activity logs
+    # or later we can develop a monitoring system to analyze the logs for potential risks
     @classmethod
     def logEvent(cls, message: string, type: EventType):
         ip_address = UserService.get_user_ip_address()
@@ -35,11 +41,13 @@ class Logger:
         db.session.add(event)
         db.session.commit()
 
+    # Gets all the log for a specific user
     @classmethod
     def get_logs_for_user(cls, email):
         logs = Event.query.filter_by(user_email=email).order_by(Event.time_stamp.desc())
         return logs
 
+    # Delete all activity logs for a specific user
     @classmethod
     def delete_logs_for_user(cls, email):
         logs = Event.query.filter_by(user_email=email)

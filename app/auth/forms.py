@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm, RecaptchaField
 from wtforms import StringField, PasswordField, SubmitField
-from wtforms.validators import DataRequired, Email, ValidationError
+from wtforms.validators import DataRequired, Email
 from flask_login import current_user
 from app.errors.authErrors import ( 
     InvalidLoginSessionError,
@@ -9,6 +9,9 @@ from app.errors.authErrors import (
 from app.auth.models import User
 from app import bcrypt
 
+# A login form and change password form to support authentication
+# RecaptchaField was planned to be added as an extra security layer
+# because of the time constraints, it hasn't been done yet
 class LoginForm(FlaskForm):
     email = StringField('Email',
                         validators=[DataRequired(), Email()])

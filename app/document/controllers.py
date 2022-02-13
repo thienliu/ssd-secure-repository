@@ -16,12 +16,16 @@ from app.errors.filesError import (
 
 document = Blueprint('document', __name__, url_prefix='/document')
 
+# A route to handle viewing all the documents of the current logged-in user
+# login_required decorator to protect illegal action without logging in
 @document.route('/', methods=['GET', 'POST'])
 @login_required
 def list():
     files = FileService.get_user_files(user_id=current_user.id)
     return render_template('document/repository.html', files=files)
 
+# A route to handle uploading document
+# login_required decorator to protect illegal action without logging in
 @document.route('/upload', methods=['POST'])
 @login_required
 def upload():
@@ -40,6 +44,8 @@ def upload():
 
     return render_template('document/upload.html', form=form)
 
+# A route to handle download file
+# login_required decorator to protect illegal action without logging in
 @document.route('/download/<file_name>', methods=['POST'])
 @login_required
 def download(file_name):
@@ -49,6 +55,8 @@ def download(file_name):
         return f'File: {e.filename} does not exists!', 404
     return file
 
+# A route to handle delete a file
+# login_required decorator to protect illegal action without logging in
 @document.route('/delete/<file_name>', methods=['POST', 'DELETE'])
 @login_required
 def delete(file_name):
